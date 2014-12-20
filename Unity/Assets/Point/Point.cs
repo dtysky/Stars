@@ -19,6 +19,7 @@ public class Point : MonoBehaviour {
 
 	private Vector3 last_point=new Vector3();	
 	private Vector3 now_point = new Vector3();
+	Vector3 velocity = new Vector3();
 
 	private void Init(){
 		for (int i=0; i<3; i++) {
@@ -37,24 +38,31 @@ public class Point : MonoBehaviour {
 		currentResolution = resolution;
 		points = new ParticleSystem.Particle[resolution];
 		points[0].position = new Vector3(PointPosition[0], PointPosition[1], PointPosition[2]);
-		points[0].color = new Color(10f, 10f, 10f);
+		points[0].color = new Color(255f, 255f, 255f);
 		points[0].size = 0.5f;
-	}
+		}
 
 	void Start () {
 		CreatePoint ();
 	}
-	
+
+	void FixedUpdate(){
+//		now_point.Set(this.GetPosition ()[0],this.GetPosition ()[1],this.GetPosition ()[2]);
+//		velocity = now_point - last_point;
+//		Debug.Log (velocity.magnitude.ToString());
+//		last_point = now_point;
+		var locVel = transform.InverseTransformDirection(rigidbody.velocity);
+		locVel = 10 * locVel.normalized;
+		velocity = rigidbody.velocity = transform.TransformDirection(locVel);
+
+		//velocity = rigidbody.velocity = velocity.normalized * 10;
+		Debug.Log (velocity.ToString());
+	}
+
 	void Update () {
 		if (currentResolution != resolution || points == null) {
 			CreatePoint();
 		}
-
-
-		now_point.Set(this.GetPosition ()[0],this.GetPosition ()[1],this.GetPosition ()[2]);
-		Vector3 velocity = now_point - last_point;
-		Debug.Log (velocity);
-		last_point = now_point;
 
 		float[] user_force_float = Skt.Get ();
 		Vector3 user_force_vector = new Vector3 (user_force_float [0], user_force_float [1], user_force_float [2]);
@@ -62,10 +70,11 @@ public class Point : MonoBehaviour {
 
 		RefForce();
 		Vector3 force = new Vector3 (PointForce [0], PointForce [1], PointForce [2]);
-		force = force + user_force_vector;		
-		Debug.Log (force.ToString ());
+		force = force + user_force_vector;	
 		rigidbody.AddForce(force);
 		particleSystem.SetParticles(points, points.Length);
+
+
 	}
 
 	public float[] GetPosition(){
@@ -107,7 +116,7 @@ public class Point : MonoBehaviour {
 				PointForce[i]+=BallForce[i];
 		}
 		for (int i=0; i<3; i++) {
-			PointForce [i] = PointForce [i] * 0.2f;
+			PointForce [i] = PointForce [i] * 0.8f;
 		}
 		return;
 	}
