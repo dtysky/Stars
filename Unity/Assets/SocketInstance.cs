@@ -10,7 +10,7 @@ using System.Net.Sockets;
 
 public class SocketInstance {
 	public Socket sock;
-	private List<Dictionary<string, string>> list;
+	private List<Dictionary<string, float>> list;
 	private static SocketInstance instance;
 
 	public static SocketInstance GetInstance(){
@@ -23,7 +23,7 @@ public class SocketInstance {
 		IPEndPoint ip = new IPEndPoint (IPAddress.Any, 8888);
 		sock = new Socket (AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		sock.Bind (ip);
-		list = new List<Dictionary<string, string>>();
+		list = new List<Dictionary<string, float>>();
 		Debug.Log ("Listen 0.0.0.0:8888");
 
 		Thread thread = new Thread (new ThreadStart (ReceiveSocket));
@@ -37,7 +37,7 @@ public class SocketInstance {
 		IPEndPoint sender = new IPEndPoint (IPAddress.Any, 0);
 		EndPoint Remote = (EndPoint)(sender);
 
-		Dictionary<string, string> d;
+		Dictionary<string, float> d;
 
 		while (true) {
 			recv = sock.ReceiveFrom (data, 1024, SocketFlags.None, ref Remote);
@@ -51,12 +51,12 @@ public class SocketInstance {
 	private void DataParser(string recv){
 		try{
 			string[] spliteddata = new string[3];
-			Dictionary<string, string> data = new Dictionary<String, String>();
+			Dictionary<string, float> data = new Dictionary<String, float>();
 
 			spliteddata = recv.Split (',');
-			data.Add ("x", spliteddata [0]);
-			data.Add ("y", spliteddata [1]);
-			data.Add ("z", spliteddata [2]);
+			data.Add ("x", float.Parse(spliteddata [0]));
+			data.Add ("y", float.Parse(spliteddata [1]));
+			data.Add ("z", float.Parse(spliteddata [2]));
 
 			list.Add (data);
 		}catch (Exception e)
@@ -65,8 +65,8 @@ public class SocketInstance {
 		}
 	}
 
-	public Dictionary<string, string> Get(){
-		Dictionary<string, string> d;
+	public Dictionary<string, float> Get(){
+		Dictionary<string, float> d;
 		if (list.Count > 0) {
 			d = list [0];
 			list.RemoveAt (0);
