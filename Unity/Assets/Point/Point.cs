@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Point : MonoBehaviour {
 
+	private SocketInstance Skt;
+
 	public int resolution = 30;
 	
 	private int currentResolution;
@@ -37,10 +39,15 @@ public class Point : MonoBehaviour {
 		points[0].size = 0.5f;
 	}
 
+	void Start () {
+		Skt = SocketInstance.GetInstance ();
+	}
+
 	void Update () {
 		if (currentResolution != resolution || points == null) {
 			CreatePoint();
 		}
+		RefForce (Skt.Get ());
 		rigidbody.AddForce(new Vector3(PointForce["x"], PointForce["y"], PointForce["z"]));
 		particleSystem.SetParticles(points, points.Length);
 	}
