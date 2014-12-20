@@ -17,6 +17,9 @@ public class Point : MonoBehaviour {
 	private float[] PointForce={0,0,0};
 	private float PointMass=0;
 
+	private Vector3 last_point=new Vector3();	
+	private Vector3 now_point = new Vector3();
+
 	private void Init(){
 		for (int i=0; i<3; i++) {
 			PointPosition[i]=0;
@@ -46,8 +49,22 @@ public class Point : MonoBehaviour {
 		if (currentResolution != resolution || points == null) {
 			CreatePoint();
 		}
-		RefForce (Skt.Get ());
-		rigidbody.AddForce(new Vector3(PointForce[0], PointForce[1], PointForce[2]));
+
+
+		now_point.Set(this.GetPosition ()[0],this.GetPosition ()[1],this.GetPosition ()[2]);
+		Vector3 velocity = now_point - last_point;
+		Debug.Log (velocity);
+		last_point = now_point;
+
+		float[] user_force_float = Skt.Get ();
+		Vector3 user_force_vector = new Vector3 (user_force_float [0], user_force_float [1], user_force_float [2]);
+		user_force_vector = user_force_vector - user_force_vector.magnitude * velocity.normalized ;
+
+		RefForce();
+		Vector3 force = new Vector3 (PointForce [0], PointForce [1], PointForce [2]);
+		force = force + user_force_vector;		
+		Debug.Log (force.ToString ());
+		rigidbody.AddForce(force);
 		particleSystem.SetParticles(points, points.Length);
 	}
 
@@ -75,7 +92,7 @@ public class Point : MonoBehaviour {
 		return z;
 	}
 
-	public void RefForce(float[] UserForce){			
+	public void RefForce(){			
 		Bl = BallList.GetInstance ();
 		PointMass = this.rigidbody.mass;
 		PointPosition = V32Float(this.transform.position);
@@ -90,9 +107,8 @@ public class Point : MonoBehaviour {
 				PointForce[i]+=BallForce[i];
 		}
 		for (int i=0; i<3; i++) {
-			PointForce [i] += UserForce [i];
-			PointForce [i] = PointForce [i] * 0.01f;
+			PointForce [i] = PointForce [i] * 0.2f;
 		}
-			return;
+		return;
 	}
 }

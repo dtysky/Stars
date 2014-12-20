@@ -41,8 +41,7 @@ public class SocketInstance {
 
 		while (true) {
 			recv = sock.ReceiveFrom (data, 1024, SocketFlags.None, ref Remote);
-			
-			Debug.Log(list.Count.ToString());
+
 			if (recv<=0 ){
 				Close();
 				break;
