@@ -43,6 +43,8 @@ public class Point : MonoBehaviour {
 		Skt = SocketInstance.GetInstance ();
 	}
 
+	Random ra=new Random();
+	int i=0;
 	void Update () {
 		if (currentResolution != resolution || points == null) {
 			CreatePoint();
