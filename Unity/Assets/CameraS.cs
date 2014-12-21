@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class CameraS : MonoBehaviour {
-
-	//Point Pt=new Point();
-	//Dictionary<string,float> PointPosition=new Dictionary<string, float>();
+	//音乐文件
+	public AudioSource music;
+	//音量
+	public float musicVolume;	
 	
-	// Update is called once per frame
-	void Update () {
-		//PointPosition = Pt.GetPosition ();
-		//Debug.Log (PointPosition.ToString ());
+	void Start() {
+		//设置默认音量
+		musicVolume = 1f;
+		music.Play();
 	}
 }

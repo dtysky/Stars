@@ -20,6 +20,7 @@ public class Point : MonoBehaviour {
 	private Vector3 last_point=new Vector3();	
 	private Vector3 now_point = new Vector3();
 	Vector3 velocity = new Vector3();
+	private bool first_time_speedup = true;
 
 	private void Init(){
 		for (int i=0; i<3; i++) {
@@ -51,12 +52,16 @@ public class Point : MonoBehaviour {
 //		velocity = now_point - last_point;
 //		Debug.Log (velocity.magnitude.ToString());
 //		last_point = now_point;
+		if (first_time_speedup) {
+			first_time_speedup = false;
+			rigidbody.velocity = rigidbody.velocity.normalized * 10;
+		}
 		var locVel = transform.InverseTransformDirection(rigidbody.velocity);
-		locVel = 10 * locVel.normalized;
-		velocity = rigidbody.velocity = transform.TransformDirection(locVel);
+		velocity = transform.TransformDirection(locVel);
 
 		//velocity = rigidbody.velocity = velocity.normalized * 10;
 		Debug.Log (velocity.ToString());
+		Debug.Log (velocity.magnitude.ToString());
 	}
 
 	void Update () {
@@ -70,11 +75,24 @@ public class Point : MonoBehaviour {
 
 		RefForce();
 		Vector3 force = new Vector3 (PointForce [0], PointForce [1], PointForce [2]);
-		force = force + user_force_vector;	
+		force = force + user_force_vector*5f;	
 		rigidbody.AddForce(force);
 		particleSystem.SetParticles(points, points.Length);
 
 
+	}
+
+	int AllScole=0;
+	void OnTriggerEnter(Collider e) 
+	{ 
+		AllScole += 100;
+	}
+
+	void OnGUI(){
+		GUI.skin.label.fontSize = 32;
+		GUI.Label(new Rect(10, 10, 200, 160), "Your Scole is\n"+AllScole.ToString());
+		if (GUI.Button (new Rect (10, 960, 200, 100), "Exit !"))
+			Application.Quit ();
 	}
 
 	public float[] GetPosition(){
@@ -116,7 +134,7 @@ public class Point : MonoBehaviour {
 				PointForce[i]+=BallForce[i];
 		}
 		for (int i=0; i<3; i++) {
-			PointForce [i] = PointForce [i] * 0.8f;
+			PointForce [i] = PointForce [i] * 1f;
 		}
 		return;
 	}

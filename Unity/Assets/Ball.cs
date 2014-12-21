@@ -6,7 +6,7 @@ public class Ball : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		float x, y, z, si, kg;
-		float range = 200;
+		float range = 1500;
 		x = Random.Range (-range, range)*1f;
 		y = Random.Range (-range, range)*1f;
 		z = Random.Range (-range, range)*1f;
@@ -23,4 +23,4 @@ public class Ball : MonoBehaviour {
 	void Update () {
 	
 	}
-}
+}	

@@ -1,0 +1,54 @@
+
+<!-- saved from url=(0038)http://192.168.199.101:8000/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=GBK"></head><body><p id="x"></p> 
+<p id="y"></p> 
+<p id="z"></p> 
+<p id="log"></p> 
+
+<script> 
+console.log = function(str){
+    document.getElementById("log").innerHTML += str;
+}
+
+// Create Socket.IO instance, build the connection.
+url = document.location.origin + "/websocket";
+socket = new WebSocket(url.replace("http","ws"));
+//socket.connect();
+
+// Add a listener for the connection.
+socket.onopen = function() {
+  console.log('Client has connected to the server!'); 
+  };
+
+// Add a listener for received a message.
+socket.onmessage = function(data) {
+  console.log('Received a message from the server!',data); 
+};
+
+// Send a message to the server.
+sendMessageToServer = function (message) {
+  socket.send(message); 
+} 
+
+deviceMotionHandler =function (eventData) {
+  var gravity = eventData.accelerationIncludingGravity; 
+  var acceleration = eventData.acceleration;
+  gravity.x = gravity.x - acceleration.x;
+  gravity.y = gravity.y - acceleration.y;
+  gravity.z = gravity.z - acceleration.z;
+
+  document.getElementById("x").innerHTML = gravity.x; 
+  document.getElementById("y").innerHTML = gravity.y; 
+  document.getElementById("z").innerHTML = gravity.z;
+
+  sendMessageToServer(gravity.x+ "," + gravity.y + "," +gravity.z );
+} 
+
+if (window.DeviceMotionEvent) { 
+window.addEventListener('devicemotion', deviceMotionHandler, false);
+}else{ 
+    alert('Sorry, your browser does not support the gravity sensor.');
+} 
+
+</script>
+</body></html>
