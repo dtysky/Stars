@@ -54,7 +54,7 @@ public class Point : MonoBehaviour {
 //		last_point = now_point;
 		if (first_time_speedup) {
 			first_time_speedup = false;
-			rigidbody.velocity = rigidbody.velocity.normalized * 10;
+			rigidbody.velocity = new Vector3(0,0,10);
 		}
 		var locVel = transform.InverseTransformDirection(rigidbody.velocity);
 		velocity = transform.TransformDirection(locVel);

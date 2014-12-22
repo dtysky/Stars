@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(__file__))
 
 websocket_connections = set()
 udpCliSock = socket(AF_INET, SOCK_DGRAM)
-DEST_HOST = "192.168.199.214"
+DEST_HOST = "127.0.0.1"
 DEST_PORT = 23333
 
 class MainHandler(tornado.web.RequestHandler):
